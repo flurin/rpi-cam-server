@@ -63,7 +63,7 @@ camera.on("read", function(err, timestamp, filename){
       sendFileToAllClients(path);
     }
   });
-  camera.stop();  
+  // camera.stop();  
 });
 
 app.get("/snap-test", function(req, res){
