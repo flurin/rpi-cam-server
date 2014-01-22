@@ -52,6 +52,8 @@ camera.on("read", function(err, timestamp, filename){
     console.log("tempfile", filename);
     return;
   }
+  
+  console.log("Check path", path);
   fs.exists(path, function(exists){
     if(exists){
       sendFileToAllClients(path);
