@@ -28,6 +28,7 @@ var binaryserver = new BinaryServer({server: server, path: '/stream'});
 
 binaryserver.on('connection', function(client){
   var file = fs.createReadStream(__dirname + '/flower.png');
+  console.log("Client connected");
   client.send(file);
 });
 
