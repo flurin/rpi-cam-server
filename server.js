@@ -42,7 +42,7 @@ app.get("/snap", function(req, res){
   res.send("Taken photo");
 })
 
-camera.on("read", function(err, filename){ 
+camera.on("read", function(err, timestamp, filename){ 
   console.log("Took photo ", filename);
   sendFileToAllClients(filename);
 });
