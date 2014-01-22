@@ -48,6 +48,10 @@ app.get("/snap", function(req, res){
 camera.on("read", function(err, timestamp, filename){ 
   console.log("Took photo ", filename);
   var path = __dirname + "/data/" + filename;
+  if(filename.match("~")){
+    console.log("tempfile", filename);
+    return;
+  }
   fs.exists(path, function(exists){
     if(exists){
       sendFileToAllClients(path);
