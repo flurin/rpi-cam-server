@@ -46,7 +46,11 @@ app.get("/snap", function(req, res){
 
 camera.on("read", function(err, timestamp, filename){ 
   console.log("Took photo ", filename);
-  sendFileToAllClients(filename);
+  fs.exists(filename, function(exists){
+    if(exists){
+      sendFileToAllClients(filename);    
+    }
+  });
 });
 
 app.get("/snap-test", function(req, res){
