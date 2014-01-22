@@ -18,15 +18,6 @@ var camera = new RaspiCam({
   timeout: 0
 });
 
-var sendFileToAllClients = function(filename){
-  var cs = binaryserver.clients;  
-  var file = fs.createReadStream(filename);
-  console.log("Sending file", filename);
-  Object.keys(cs).forEach(function(k){
-    cs[k].send(file);
-  })  
-}
-
 // Let's serve static files
 app.use(express.static(__dirname + '/public'));
 
@@ -39,6 +30,15 @@ binaryserver.on('connection', function(client){
   var file = fs.createReadStream(__dirname + '/flower.png');
   client.send(file);
 });
+
+var sendFileToAllClients = function(filename){
+  var cs = binaryserver.clients;  
+  var file = fs.createReadStream(filename);
+  Object.keys(cs).forEach(function(k){
+    console.log("Sending file ", filename, " to ", k);
+    cs[k].send(file);
+  })  
+}
 
 app.get("/snap", function(req, res){
   camera.start();
