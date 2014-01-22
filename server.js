@@ -12,7 +12,8 @@ var RaspiCam = require("raspicam");
 var BinaryServer = binaryjs.BinaryServer;
 var app = express();
 var camera = new RaspiCam({ 
-  mode: "photo"
+  mode: "photo",
+  output: __dirname + "/data/pic%d.png"
 });
 
 var sendFileToAllClients = function(filename){
