@@ -43,7 +43,6 @@ binaryserver.on('connection', function(client){
 app.get("/snap", function(req, res){
   camera.start();
   res.send("Taken photo");
-  camera.stop();  
 })
 
 camera.on("read", function(err, timestamp, filename){ 
@@ -54,6 +53,7 @@ camera.on("read", function(err, timestamp, filename){
       sendFileToAllClients(path);
     }
   });
+  camera.stop();  
 });
 
 app.get("/snap-test", function(req, res){
