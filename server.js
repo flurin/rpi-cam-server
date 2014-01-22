@@ -21,6 +21,7 @@ var camera = new RaspiCam({
 var sendFileToAllClients = function(filename){
   var cs = binaryserver.clients;  
   var file = fs.createReadStream(filename);
+  console.log("Sending file", filename);
   Object.keys(cs).forEach(function(k){
     cs[k].send(file);
   })  
@@ -42,13 +43,15 @@ binaryserver.on('connection', function(client){
 app.get("/snap", function(req, res){
   camera.start();
   res.send("Taken photo");
+  camera.stop();  
 })
 
 camera.on("read", function(err, timestamp, filename){ 
   console.log("Took photo ", filename);
-  fs.exists(filename, function(exists){
+  var path = __dirname + "/data/" + filename;
+  fs.exists(path, function(exists){
     if(exists){
-      sendFileToAllClients(filename);    
+      sendFileToAllClients(path);
     }
   });
 });
