@@ -32,7 +32,9 @@ binaryserver.on('connection', function(client){
 });
 
 var sendFileToAllClients = function(filename){
+  console.log("Sending file", filename);
   var cs = binaryserver.clients;  
+  console.log("Sending to ", Object.keys(cs).length, "clients")
   var file = fs.createReadStream(filename);
   Object.keys(cs).forEach(function(k){
     console.log("Sending file ", filename, " to ", k);
@@ -55,6 +57,7 @@ camera.on("read", function(err, timestamp, filename){
   
   console.log("Check path", path);
   fs.exists(path, function(exists){
+    console.log("Path", path, exists);
     if(exists){
       sendFileToAllClients(path);
     }
