@@ -9,7 +9,7 @@
     Oh hai
     
     <script>
-      var client = new BinaryClient('ws://192.168.0.30:3000/stream');
+      var client = new BinaryClient('ws://'+window.location.host + '/stream');
       client.on('stream', function(stream, meta){    
           var parts = [];
           stream.on('data', function(data){
