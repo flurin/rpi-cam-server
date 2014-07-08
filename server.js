@@ -12,12 +12,15 @@ var BinaryServer = binaryjs.BinaryServer;
 var app = express();
 var camera = new RaspiCam({ 
   mode: "photo",
-  output: __dirname + "/data/pic%d.jpg",
+  output: __dirname + "/data/pic.jpg",
   encoding: "jpg",
-  timeout: 0,
+  timeout: 0, // Let's keep going
   width: 1024,
   height: 768,
   rotation: 180,
+  nopreview: true,
+  thumb: "none",
+  timelapse: 1000
 });
 
 // Let's serve static files
