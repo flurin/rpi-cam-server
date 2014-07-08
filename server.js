@@ -8,14 +8,15 @@ var fs = require('fs');
 var RaspiCam = require("raspicam");
 
 
-
 var BinaryServer = binaryjs.BinaryServer;
 var app = express();
 var camera = new RaspiCam({ 
   mode: "photo",
   output: __dirname + "/data/pic%d.jpg",
   encoding: "jpg",
-  timeout: 0
+  timeout: 0,
+  width: 1024,
+  height: 768
 });
 
 // Let's serve static files
