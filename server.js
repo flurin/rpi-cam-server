@@ -20,7 +20,7 @@ var camera = new RaspiCam({
   rotation: 180,
   nopreview: true,
   thumb: "none",
-  timelapse: 1000
+  timelapse: 2000
 });
 
 // Let's serve static files
