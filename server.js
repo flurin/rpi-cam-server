@@ -16,7 +16,8 @@ var camera = new RaspiCam({
   encoding: "jpg",
   timeout: 0,
   width: 1024,
-  height: 768
+  height: 768,
+  rotation: 180,
 });
 
 // Let's serve static files
