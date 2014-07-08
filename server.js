@@ -28,9 +28,11 @@ var server = http.createServer(app);
 var binaryserver = new BinaryServer({server: server, path: '/stream'});
 
 binaryserver.on('connection', function(client){
-  var file = fs.createReadStream(__dirname + '/flower.png');
   console.log("Client connected");
-  client.send(file);
+  client.send({ 
+    message: "Welcome",
+    clients: Object.keys(binaryserver.clients).length 
+  }, { type: "json" });
 });
 
 var sendFileToAllClients = function(filename){
@@ -40,14 +42,9 @@ var sendFileToAllClients = function(filename){
   var file = fs.createReadStream(filename);
   Object.keys(cs).forEach(function(k){
     console.log("Sending file ", filename, " to ", k);
-    cs[k].send(file);
+    cs[k].send(file, { type: "image" });
   })  
 }
-
-app.get("/snap", function(req, res){
-  camera.start();
-  res.send("Taken photo");
-})
 
 camera.on("read", function(err, timestamp, filename){ 
   console.log("Took photo ", filename);
@@ -64,21 +61,30 @@ camera.on("read", function(err, timestamp, filename){
       sendFileToAllClients(path);
     }
   });
-  // camera.stop();  
+  // camera.stop();
 });
 
-app.get("/snap-test", function(req, res){
-  var o = [];
-  var cs = binaryserver.clients;
-  var file = fs.createReadStream(__dirname + '/test.png');
-  Object.keys(cs).forEach(function(k){
-    cs[k].send(file);
-    o.push([k]);
-  })
-  
-  res.send(JSON.stringify(o));
+app.get("/camera/start", function(req, res){
+  camera.start();
+
+  res.status = 200;
+  res.send("");
 })
 
+app.get("/camera/stop", function(req, res){
+  camera.stop();
+
+  res.status = 200;
+  res.send("");
+})
+
+// Send a one time test image.
+app.get("/camera/test", function(req, res){
+  sendFileToAllClients(__dirname + '/public/images/test.png')
+  
+  res.status = 200;
+  res.send("");
+})
 
 
 
