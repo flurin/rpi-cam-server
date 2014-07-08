@@ -55,7 +55,10 @@
         var img = new Image();
         img.src = (window.URL || window.webkitURL).createObjectURL(new Blob(data));
         img.onload = function(){
-          ctx.drawImage(img, 0, 0, canvasEl.width, canvasEl.height)
+          canvasEl.width = canvasEl.width;
+          ctx.save();
+          ctx.rotate(Math.PI);
+          ctx.drawImage(img, -1 * canvasEl.width, -1 * canvasEl.height);
         }
       };
 
