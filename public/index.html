@@ -42,6 +42,14 @@
             controls.stop();
           }
         },
+        status : function(){
+          var request = new XMLHttpRequest();
+          request.onload = function(){
+            cameraOn = (this.responseText === "true" ? true : false);
+          };
+          request.open('GET', '/camera/status', true);
+          request.send();
+        },
         start: function(){
           var request = new XMLHttpRequest();
           request.onload = function(){
@@ -77,6 +85,8 @@
           applyEffects();
         }      
       }
+
+      controls.status();
 
       var gui = new dat.GUI();
 

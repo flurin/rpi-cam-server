@@ -22,6 +22,7 @@ var camera = new RaspiCam({
   thumb: "none",
   timelapse: 2000
 });
+var cameraStarted = false;
 
 // Let's serve static files
 app.use(express.static(__dirname + '/public'));
@@ -68,18 +69,31 @@ camera.on("read", function(err, timestamp, filename){
   // camera.stop();
 });
 
+camera.on("start", function(err, timestamp){
+  cameraStarted = true;
+});
+
+camera.on("stop", function(err, timestamp){
+  cameraStarted = false;
+})
+
 app.get("/camera/start", function(req, res){
   camera.start();
 
   res.status = 200;
   res.send("");
-})
+});
 
 app.get("/camera/stop", function(req, res){
   camera.stop();
 
   res.status = 200;
   res.send("");
+});
+
+app.get("/camera/status", function(req, res){
+  res.status = 200;
+  res.send(cameraStarted ? "true" : "false");
 })
 
 // Send a one time test image.
@@ -88,7 +102,7 @@ app.get("/camera/test", function(req, res){
   
   res.status = 200;
   res.send("");
-})
+});
 
 
 
