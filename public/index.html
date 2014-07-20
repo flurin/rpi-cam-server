@@ -46,6 +46,7 @@
           var request = new XMLHttpRequest();
           request.onload = function(){
             cameraOn = (this.responseText === "true" ? true : false);
+            controls.updateCameraStatus();
           };
           request.open('GET', '/camera/status', true);
           request.send();
@@ -53,8 +54,8 @@
         start: function(){
           var request = new XMLHttpRequest();
           request.onload = function(){
-            toggleControl.name("Stop Camera");
             cameraOn = true;
+            controls.updateCameraStatus();
           };
           request.open('GET', '/camera/start', true);
           request.send();
@@ -62,8 +63,8 @@
         stop: function(){
           var request = new XMLHttpRequest();
           request.onload = function(){
-            toggleControl.name("Start Camera");
             cameraOn = false;
+            controls.updateCameraStatus();
           };          
           request.open('GET', '/camera/stop', true);
           request.send();
@@ -83,7 +84,14 @@
           }
 
           applyEffects();
-        }      
+        },
+        updateCameraStatus : function(){
+          if(cameraOn){
+            toggleControl.name("Stop Camera");
+          } else {
+            toggleControl.name("Start Camera");
+          }
+        }
       }
 
       controls.status();
