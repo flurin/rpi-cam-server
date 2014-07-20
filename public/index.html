@@ -124,9 +124,21 @@
         });
 
         stream.on("error", function(error){
-          console.log("ERROR", error);
+          console.error("ERROR", error);
         })
-      });      
+      });   
+
+      client.on("error", function(error){
+        console.error("ERROR", error);
+      });
+
+      client.on("open", function(){
+        console.log("Connection opened")
+      })
+
+      client.on("close", function(){
+        console.log("Connection closed")
+      })
     </script>
   </body>
 </html>
