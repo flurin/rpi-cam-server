@@ -34,7 +34,7 @@ var binaryserver = new BinaryServer({server: server, path: '/stream'});
 binaryserver.on('connection', function(client){
   console.log("Client connected");
   client.send({ 
-    message: "Welcome",
+    message: "Successfully connected to server",
     clients: Object.keys(binaryserver.clients).length 
   }, { type: "json" });
 });
