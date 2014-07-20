@@ -86,6 +86,8 @@ DAEMON=/usr/local/bin/$NAME                 # this SHOULD POINT TO where your no
 
 # Do NOT "set -e"
 
+UID=`id -u`
+
 [ $UID -eq "0" ] && LOCAL_VAR_RUN=/var/run # in case this script is run by root, override user setting
 THIS_ARG=$0
 INIT_SCRIPT_NAME=`basename $THIS_ARG`
