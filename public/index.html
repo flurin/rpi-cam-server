@@ -44,7 +44,7 @@
         },
         start: function(){
           var request = new XMLHttpRequest();
-          request.onLoad = function(){
+          request.onload = function(){
             toggleControl.name("Stop Camera");
             cameraOn = true;
           };
@@ -53,7 +53,7 @@
         },
         stop: function(){
           var request = new XMLHttpRequest();
-          request.onLoad = function(){
+          request.onload = function(){
             toggleControl.name("Start Camera");
             cameraOn = false;
           };          
