@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>RPI Cam Controller</title>
+    <script src="/javascripts/dat.gui.min.js"></script>
     <script src="/javascripts/binary.js"></script>
     <script src="/javascripts/canvas_effects.js"></script>
     
@@ -25,6 +26,21 @@
       var ctx = canvasEl.getContext("2d");
 
       var fx = new CanvasEffects(canvasEl, {useWorker: false});
+      var fxOptions = {
+        brightness: 0,
+        contrast: 0,
+        gamma: 1
+      };
+
+      var fxGui = new dat.GUI();
+      fxGui.add(fxOptions,'brightness',-100,100);
+      fxGui.add(fxOptions,'contrast',-100,100);
+      fxGui.add(fxOptions,'gamma',0,2);
+
+      for(var i in fxGui.__controllers){
+        fxGui.__controllers[i].onChange(function controllerOnChange(v){ applyEffects() });  
+        fxGui.__controllers[i].onFinishChange(function controllerOnFinishChange(v){ applyEffects() });
+      }
       
       document.getElementById("btn_start").addEventListener("click", function(){
         var request = new XMLHttpRequest();
@@ -45,32 +61,34 @@
       });
 
       var applyEffects = function(){
-
+        fx.restore();
+        for(var i in fxOptions){
+          fx[i](fxOptions[i]);
+        }
       };
 
       var handleMessage = function(data){
-        console.log("DATA", data);
-
         canvasEl.width = canvasEl.width;
         ctx.font = "bold 16px Arial";
         ctx.fillText(data.message, 10, 50);
       };
 
       var handleImage = function(data){
-        console.log("DRAW!");
-
         var img = new Image();
         img.src = (window.URL || window.webkitURL).createObjectURL(new Blob(data));
         img.onload = function(){
           canvasEl.width = canvasEl.width;
           ctx.drawImage(img, 0, 0);
+
+          // Save initial image state
+          fx.save();
+
           applyEffects();
         }
       };
 
       var client = new BinaryClient('ws://'+window.location.host + '/stream');
       client.on('stream', function(stream, meta){   
-        console.log(stream, meta);
         var parts = [];
         stream.on('data', function(data){
           console.log("DATA", meta);
