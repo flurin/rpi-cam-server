@@ -110,7 +110,6 @@
       client.on('stream', function(stream, meta){   
         var parts = [];
         stream.on('data', function(data){
-          console.log("DATA", meta);
           if(meta.type === "image"){
             parts.push(data);  
           } else {
@@ -119,7 +118,6 @@
         });
 
         stream.on('end', function(){
-          console.log("END", meta);
           if(meta.type === "image"){
             handleImage(parts);
           } 
