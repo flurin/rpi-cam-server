@@ -32,14 +32,31 @@
 
       var fxOptions = clone(fxDefaults);
 
+      var cameraOn = false;
+
       var controls = {
+        toggle: function(){
+          if(cameraOn === false){
+            controls.start();  
+          } else {
+            controls.stop();
+          }
+        },
         start: function(){
           var request = new XMLHttpRequest();
+          request.onLoad = function(){
+            toggleControl.name("Stop Camera");
+            cameraOn = true;
+          };
           request.open('GET', '/camera/start', true);
           request.send();
         },
         stop: function(){
           var request = new XMLHttpRequest();
+          request.onLoad = function(){
+            toggleControl.name("Start Camera");
+            cameraOn = false;
+          };          
           request.open('GET', '/camera/stop', true);
           request.send();
         },
@@ -63,9 +80,8 @@
 
       var gui = new dat.GUI();
 
-      gui.add(controls, "start").name("Start");
-      gui.add(controls, "stop").name("Stop");
-      gui.add(controls, "test").name("Test");
+      var toggleControl = gui.add(controls, "toggle").name("Start Camera");
+      gui.add(controls, "test").name("Test image");
 
 
       var fxGui = gui.addFolder("Effects");
@@ -107,6 +123,7 @@
       };
 
       var client = new BinaryClient('ws://'+window.location.host + '/stream');
+
       client.on('stream', function(stream, meta){   
         var parts = [];
         stream.on('data', function(data){
