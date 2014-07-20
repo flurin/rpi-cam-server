@@ -12,53 +12,72 @@
     <div class="view">
       <canvas class="view__canvas" id="canvas" width="1024" height="768">
       </canvas>
-
-      <div class="view__controls">
-        <button id="btn_start">Start!</button>
-        <button id="btn_stop">Stop!</button>
-        <button id="btn_test">Test!</button>
-      </div>
     </div>
-
-    
     <script>
+      function clone(o) {
+          function F() {}
+          F.prototype = o;
+          return new F();
+      }
+
       var canvasEl = document.getElementById("canvas");
       var ctx = canvasEl.getContext("2d");
 
       var fx = new CanvasEffects(canvasEl, {useWorker: false});
-      var fxOptions = {
+      var fxDefaults = {
         brightness: 0,
         contrast: 0,
         gamma: 1
       };
 
-      var fxGui = new dat.GUI();
+      var fxOptions = clone(fxDefaults);
+
+      var controls = {
+        start: function(){
+          var request = new XMLHttpRequest();
+          request.open('GET', '/camera/start', true);
+          request.send();
+        },
+        stop: function(){
+          var request = new XMLHttpRequest();
+          request.open('GET', '/camera/stop', true);
+          request.send();
+        },
+        test: function(){
+          var request = new XMLHttpRequest();
+          request.open('GET', '/camera/test', true);
+          request.send();
+        },
+        resetEffects: function(){
+          for(var i in fxDefaults){
+            fxOptions[i] = fxDefaults[i];
+          }
+
+          for (var i in fxGui.__controllers) {
+            fxGui.__controllers[i].updateDisplay();
+          }
+
+          applyEffects();
+        }      
+      }
+
+      var gui = new dat.GUI();
+
+      gui.add(controls, "start").name("Start");
+      gui.add(controls, "stop").name("Stop");
+      gui.add(controls, "test").name("Test");
+
+
+      var fxGui = gui.addFolder("Effects");
       fxGui.add(fxOptions,'brightness',-100,100);
       fxGui.add(fxOptions,'contrast',-100,100);
       fxGui.add(fxOptions,'gamma',0,2);
+      fxGui.add(controls, "resetEffects").name("Reset");      
 
       for(var i in fxGui.__controllers){
         fxGui.__controllers[i].onChange(function controllerOnChange(v){ applyEffects() });  
         fxGui.__controllers[i].onFinishChange(function controllerOnFinishChange(v){ applyEffects() });
       }
-      
-      document.getElementById("btn_start").addEventListener("click", function(){
-        var request = new XMLHttpRequest();
-        request.open('GET', '/camera/start', true);
-        request.send();
-      });
-
-      document.getElementById("btn_stop").addEventListener("click", function(){
-        var request = new XMLHttpRequest();
-        request.open('GET', '/camera/stop', true);
-        request.send();
-      });
-
-      document.getElementById("btn_test").addEventListener("click", function(){
-        var request = new XMLHttpRequest();
-        request.open('GET', '/camera/test', true);
-        request.send();
-      });
 
       var applyEffects = function(){
         fx.restore();
