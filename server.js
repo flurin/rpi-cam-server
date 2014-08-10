@@ -66,15 +66,16 @@ camera.on("read", function(err, timestamp, filename){
       sendFileToAllClients(path);
     }
   });
-  // camera.stop();
 });
 
 camera.on("start", function(err, timestamp){
   cameraStarted = true;
+  cameraStartTime = new Date();
 });
 
 camera.on("stop", function(err, timestamp){
   cameraStarted = false;
+  cameraStartTime = null;
 })
 
 app.get("/camera/start", function(req, res){
@@ -105,9 +106,15 @@ app.get("/camera/test", function(req, res){
 });
 
 var startTime = new Date();
+var cameraStartTime = null;
 var ping = setInterval(function(){
   var now = new Date();
-  console.log("[ALIVE] ", now, " (running: ", (now - startTime)/1000/60 ," min)" );
+  var time = "" + now.getHours() + ":" + now.getMinutes()
+  var cameraTime = "";
+  if(cameraStartTime){
+    cameraTime = ", cam: " + Math.round((now - cameraStartTime)/1000/60) + " min"
+  }
+  console.log("[ALIVE]", time, "(running:", Math.round((now - startTime)/1000/60) ,"min", cameraTime, ")" );
 }, 1000);
 
 server.listen(port);
