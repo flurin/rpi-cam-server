@@ -104,7 +104,11 @@ app.get("/camera/test", function(req, res){
   res.send("");
 });
 
-
+var startTime = new Date();
+var ping = setInterval(function(){
+  var now = new Date();
+  console.log("[ALIVE] ", now, " (running: ", (now - startTime)/1000/60 ," min)" );
+}, 1000);
 
 server.listen(port);
 console.log('Listening on port ' + port);
